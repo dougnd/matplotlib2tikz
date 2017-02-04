@@ -47,6 +47,7 @@ def test_hash(name):
 \\usepackage{pgfplots}
 \\usepgfplotslibrary{groupplots}
 \\usetikzlibrary{shapes.arrows}
+\\usetikzlibrary{patterns}
 \\pgfplotsset{compat=newest}
 \\begin{document}
 \\input{%s}

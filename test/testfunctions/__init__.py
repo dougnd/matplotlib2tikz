@@ -13,6 +13,7 @@ __all__ = [
   'fancybox',
   'fancy_colorbar',
   'fillstyle',
+  'hatches',
   'heat',
   'image_plot',
   'legends2',

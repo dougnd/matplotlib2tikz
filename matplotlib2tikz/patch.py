@@ -1,8 +1,53 @@
 # -*- coding: utf-8 -*-
 #
 from . import path as mypath
+from . import color
 
 import matplotlib as mpl
+
+def get_pattern_options(data, obj):
+    ''' Gets the pattern options for a patch
+    '''
+    hatch = obj.get_hatch()
+    hatch2pattern = {
+            '/': 'north east lines',
+            '\\': 'north west lines',
+            '|': 'vertical lines',
+            '-': 'horizontal lines',
+            '+': 'grid',
+            '|-': 'grid',
+            '-|': 'grid',
+            'x': 'crosshatch',
+            '/\\': 'crosshatch',
+            '\\/': 'crosshatch',
+            '.': 'dots',
+            'x.': 'crosshatch dots',
+            '.x': 'crosshatch dots',
+            '*': 'fivepointed stars'
+            }
+
+    if hatch == None:
+        return None
+
+    if hatch not in hatch2pattern:
+        print (('Warning, could not convert hatch %s, currently '
+                'only the following hatches are supported: %s' 
+                ) % (hatch, ','.join(hatch2pattern.keys())))
+        return None
+
+    # set the pattern color
+    pattern_color_str = ''
+    hatch_color = mpl.rcParams['hatch.color']
+    if hatch_color is not None:
+        _, col, _ = color.mpl_color2xcolor(data, hatch_color)
+        pattern_color_str = ',pattern color='+col
+
+
+    # Note, this must be a postaction becuase othersiwe there
+    # would be no fill. Fill is overriden by pattern. See:
+    # http://tex.stackexchange.com/questions/24964/how-to-combine-fill-and-pattern-in-a-pgfplot-bar-plot
+    return ('postaction={pattern=%s%s}' 
+            % (hatch2pattern[hatch], pattern_color_str))
 
 
 def draw_patch(data, obj):
@@ -14,6 +59,9 @@ def draw_patch(data, obj):
             obj.get_edgecolor(),
             obj.get_facecolor()
             )
+    pattern_option = get_pattern_options(data, obj)
+    if pattern_option is not None:
+        draw_options.append(pattern_option)
 
     if isinstance(obj, mpl.patches.Rectangle):
         # rectangle specialization
