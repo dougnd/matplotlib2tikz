@@ -37,7 +37,9 @@ def get_pattern_options(data, obj):
 
     # set the pattern color
     pattern_color_str = ''
-    hatch_color = mpl.rcParams['hatch.color']
+    hatch_color = None
+    if 'hatch.color' in mpl.rcParams:
+        hatch_color = mpl.rcParams['hatch.color']
     if hatch_color is not None:
         _, col, _ = color.mpl_color2xcolor(data, hatch_color)
         pattern_color_str = ',pattern color='+col
